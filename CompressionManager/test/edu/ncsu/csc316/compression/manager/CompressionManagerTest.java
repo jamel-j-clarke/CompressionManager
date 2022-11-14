@@ -33,7 +33,7 @@ public class CompressionManagerTest {
 	 * Tests getCompressed() exception checking.
 	 */
 	@Test
-	public void testGetDeompressedException() {
+	public void testGetDecompressedException() {
 		try {
 			CompressionManager cm = new CompressionManager("input/empty.txt");
 			Exception e1 = assertThrows(IllegalArgumentException.class, () -> cm.getDecompressed());

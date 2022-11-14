@@ -1,7 +1,10 @@
 package edu.ncsu.csc316.compression.manager;
 
 import java.io.FileNotFoundException;
+
+import edu.ncsu.csc316.compression.dsa.Algorithm;
 import edu.ncsu.csc316.compression.dsa.DSAFactory;
+import edu.ncsu.csc316.compression.dsa.DataStructure;
 import edu.ncsu.csc316.compression.io.InputReader;
 import edu.ncsu.csc316.dsa.data.Identifiable;
 import edu.ncsu.csc316.dsa.list.List;
@@ -36,6 +39,10 @@ public class CompressionManager {
 	 *         if the file does not exist
 	 */
     public CompressionManager (String pathToInputFile) throws FileNotFoundException {
+    	DSAFactory.setMapType(DataStructure.SEARCHTABLE);
+    	DSAFactory.setListType(DataStructure.ARRAYBASEDLIST);
+    	DSAFactory.setComparisonSorterType(Algorithm.QUICKSORT);
+    	DSAFactory.setNonComparisonSorterType(Algorithm.RADIX_SORT);
     	try {
 	    	//get the lines from file
 	    	map = InputReader.readFile(pathToInputFile);
