@@ -52,7 +52,7 @@ public class ReportManager {
 		Map<Integer, List<String>> compMap = cm.getCompressed();
 		String compStr = "Compressed Output {\n";
 		for ( Entry<Integer, List<String>> e : compMap.entrySet()) {
-			compStr += INDENT + "Line " + ( e.getKey() + 1 ) + ": ";
+			compStr += INDENT + "Line " + ( e.getKey() + 1 ) + ":";
 			for ( int i = e.getValue().size() - 1; i >= 0; i--) {
 				compStr += e.getValue().get(i);
 				if ( i > 0 ) compStr += " "; 
@@ -73,7 +73,7 @@ public class ReportManager {
     	Map<Integer, List<String>> decompMap = cm.getDecompressed();
 		String decompStr = "Decompressed Output {\n";
 		for ( Entry<Integer, List<String>> e : decompMap.entrySet()) {
-			decompStr += INDENT + "Line " + ( e.getKey() + 1 ) + ": ";
+			decompStr += INDENT + "Line " + ( e.getKey() + 1 ) + ":";
 			for ( int i = e.getValue().size() - 1; i >= 0; i--) {
 				decompStr += e.getValue().get(i);
 				if ( i > 0 ) decompStr += " "; 
