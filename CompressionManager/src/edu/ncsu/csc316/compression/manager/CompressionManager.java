@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import edu.ncsu.csc316.compression.dsa.Algorithm;
 import edu.ncsu.csc316.compression.dsa.DSAFactory;
 import edu.ncsu.csc316.compression.dsa.DataStructure;
+import edu.ncsu.csc316.compression.io.InputReader;
+import edu.ncsu.csc316.dsa.data.Identifiable;
 import edu.ncsu.csc316.dsa.list.List;
 import edu.ncsu.csc316.dsa.map.Map;
 import edu.ncsu.csc316.dsa.map.Map.Entry;
@@ -28,6 +30,9 @@ public class CompressionManager {
     /** Map that will hold each word and its occurrence in the file. */
     private Map<Integer, String> dictionary;
     
+    /** Path to the input file. */
+    private String path;
+    
 	/**
 	 * Constructs a CompressionManager object, given an input file, that
 	 * will use InputReader.readFile() to read it in for use in
@@ -41,6 +46,7 @@ public class CompressionManager {
     	DSAFactory.setListType(DataStructure.ARRAYBASEDLIST);
     	DSAFactory.setComparisonSorterType(Algorithm.QUICKSORT);
     	DSAFactory.setNonComparisonSorterType(Algorithm.RADIX_SORT);
+    	path = pathToInputFile;
     }
 
     /**
@@ -52,6 +58,31 @@ public class CompressionManager {
      * @return a map of compressed words from the input file
      */
     public Map<Integer, List<String>> getCompressed() {
+    	try {
+	    	//get the lines from file
+			 map = InputReader.readFile(path);
+	    	
+	    	
+	    	//sort the lines
+	    		//create the entry array and counter
+	    	IdentifiableEntry[] entryArray = new IdentifiableEntry[map.size()];
+	    	int counter = 0;
+	    		//add each line to the array
+	    	for ( Entry<Integer, List<String>> line : map.entrySet()) {
+	    		entryArray[ counter++ ] = new IdentifiableEntry(line);
+	    	}
+	    		//sort it
+	    	DSAFactory.getNonComparisonSorter().sort(entryArray);
+	    	
+	    	//clear the current map and add the sorted lines to it
+	    	map = (DSAFactory.getMap(null));
+	    	for (int i = 0; i < entryArray.length; i++) {
+	    		map.put(i, entryArray[i].getEntry().getValue());
+	    	}
+		} catch ( FileNotFoundException fnfe ) {
+			throw new IllegalArgumentException("The input file could not be accessed.");
+		}
+    	
     	if (map.size() == 0) {
     		throw new IllegalArgumentException("The provided input file has no text to compress.");
     	}
@@ -82,6 +113,31 @@ public class CompressionManager {
      * @return a map of decompressed words from the input file
      */
     public Map<Integer, List<String>> getDecompressed() {
+    	try {
+	    	//get the lines from file
+			 map = InputReader.readFile(path);
+	    	
+	    	
+	    	//sort the lines
+	    		//create the entry array and counter
+	    	IdentifiableEntry[] entryArray = new IdentifiableEntry[map.size()];
+	    	int counter = 0;
+	    		//add each line to the array
+	    	for ( Entry<Integer, List<String>> line : map.entrySet()) {
+	    		entryArray[ counter++ ] = new IdentifiableEntry(line);
+	    	}
+	    		//sort it
+	    	DSAFactory.getNonComparisonSorter().sort(entryArray);
+	    	
+	    	//clear the current map and add the sorted lines to it
+	    	map = (DSAFactory.getMap(null));
+	    	for (int i = 0; i < entryArray.length; i++) {
+	    		map.put(i, entryArray[i].getEntry().getValue());
+	    	}
+		} catch ( FileNotFoundException fnfe ) {
+			throw new IllegalArgumentException("The input file could not be accessed.");
+		}
+    	
     	if (map.size() == 0) {
     		throw new IllegalArgumentException("The provided input file has no text to decompress.");
     	}
@@ -104,21 +160,28 @@ public class CompressionManager {
 		
 		return map;
     }
-    
+
     /**
-     * Sets the map to the provided map.
-     * @param m the map to be set
+     * Wrapper class used to hold entries so that they can be added to an array.
+     * @author Jamel Clarke
      */
-    public void setMap( Map<Integer, List<String>> m) {
-    	this.map = m;
-    }
-    
-    /**
-     * Returns the map for the CompressionManager.
-     * @return the map for the CompressionManager.
-     */
-    public Map<Integer, List<String>> getMap() {
-    	return map;
+    private class IdentifiableEntry implements Identifiable {
+    	
+    	/** The actual entry being held by this wrapper. */
+    	private Entry<Integer, List<String>> actualEntry;
+    	
+    	public IdentifiableEntry(Entry<Integer, List<String>> e) {
+    		actualEntry = e;
+    	}
+
+		public Entry<Integer, List<String>> getEntry() {
+			return actualEntry;
+		}
+
+		@Override
+		public int getId() {
+			return actualEntry.getKey();
+		}
     }
 }
 

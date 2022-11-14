@@ -7,8 +7,6 @@ import java.io.FileNotFoundException;
 import edu.ncsu.csc316.compression.dsa.Algorithm;
 import edu.ncsu.csc316.compression.dsa.DSAFactory;
 import edu.ncsu.csc316.compression.dsa.DataStructure;
-import edu.ncsu.csc316.compression.io.InputReader;
-import edu.ncsu.csc316.dsa.data.Identifiable;
 import edu.ncsu.csc316.dsa.list.List;
 import edu.ncsu.csc316.dsa.map.Map;
 import edu.ncsu.csc316.dsa.map.Map.Entry;
@@ -39,30 +37,7 @@ public class ReportManager {
     	DSAFactory.setNonComparisonSorterType(Algorithm.RADIX_SORT);
     	cm = new CompressionManager(pathToInputFile);
     	
-		try {
-	    	//get the lines from file
-			 cm.setMap(InputReader.readFile(pathToInputFile));
-	    	
-	    	
-	    	//sort the lines
-	    		//create the entry array and counter
-	    	IdentifiableEntry[] entryArray = new IdentifiableEntry[cm.getMap().size()];
-	    	int counter = 0;
-	    		//add each line to the array
-	    	for ( Entry<Integer, List<String>> line : cm.getMap().entrySet()) {
-	    		entryArray[ counter++ ] = new IdentifiableEntry(line);
-	    	}
-	    		//sort it
-	    	DSAFactory.getNonComparisonSorter().sort(entryArray);
-	    	
-	    	//clear the current map and add the sorted lines to it
-	    	cm.setMap(DSAFactory.getMap(null));
-	    	for (int i = 0; i < entryArray.length; i++) {
-	    		cm.getMap().put(i, entryArray[i].getEntry().getValue());
-	    	}
-		} catch ( FileNotFoundException fnfe ) {
-			throw new IllegalArgumentException("The input file could not be accessed.");
-		}
+		
     }
 
     /**
@@ -110,26 +85,4 @@ public class ReportManager {
     }
     
 
-    /**
-     * Wrapper class used to hold entries so that they can be added to an array.
-     * @author Jamel Clarke
-     */
-    private class IdentifiableEntry implements Identifiable {
-    	
-    	/** The actual entry being held by this wrapper. */
-    	private Entry<Integer, List<String>> actualEntry;
-    	
-    	public IdentifiableEntry(Entry<Integer, List<String>> e) {
-    		actualEntry = e;
-    	}
-
-		public Entry<Integer, List<String>> getEntry() {
-			return actualEntry;
-		}
-
-		@Override
-		public int getId() {
-			return actualEntry.getKey();
-		}
-    }
 }
