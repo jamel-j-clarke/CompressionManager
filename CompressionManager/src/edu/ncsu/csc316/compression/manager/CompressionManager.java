@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import edu.ncsu.csc316.compression.dsa.Algorithm;
 import edu.ncsu.csc316.compression.dsa.DSAFactory;
 import edu.ncsu.csc316.compression.dsa.DataStructure;
-import edu.ncsu.csc316.compression.io.InputReader;
-import edu.ncsu.csc316.dsa.data.Identifiable;
 import edu.ncsu.csc316.dsa.list.List;
 import edu.ncsu.csc316.dsa.map.Map;
 import edu.ncsu.csc316.dsa.map.Map.Entry;
@@ -43,30 +41,6 @@ public class CompressionManager {
     	DSAFactory.setListType(DataStructure.ARRAYBASEDLIST);
     	DSAFactory.setComparisonSorterType(Algorithm.QUICKSORT);
     	DSAFactory.setNonComparisonSorterType(Algorithm.RADIX_SORT);
-    	try {
-	    	//get the lines from file
-	    	map = InputReader.readFile(pathToInputFile);
-	    	
-	    	
-	    	//sort the lines
-	    		//create the entry array and counter
-	    	IdentifiableEntry[] entryArray = new IdentifiableEntry[map.size()];
-	    	int counter = 0;
-	    		//add each line to the array
-	    	for ( Entry<Integer, List<String>> line : map.entrySet()) {
-	    		entryArray[ counter++ ] = new IdentifiableEntry(line);
-	    	}
-	    		//sort it
-	    	DSAFactory.getNonComparisonSorter().sort(entryArray);
-	    	
-	    	//clear the current map and add the sorted lines to it
-	    	map = DSAFactory.getMap(null);
-	    	for (int i = 0; i < entryArray.length; i++) {
-	    		map.put(i, entryArray[i].getEntry().getValue());
-	    	}
-    	} catch ( FileNotFoundException fnfe ) {
-    		throw new IllegalArgumentException("The input file could not be accessed.");
-    	}
     }
 
     /**
@@ -132,26 +106,19 @@ public class CompressionManager {
     }
     
     /**
-     * Wrapper class used to hold entries so that they can be added to an array.
-     * @author Jamel Clarke
+     * Sets the map to the provided map.
+     * @param m the map to be set
      */
-    private class IdentifiableEntry implements Identifiable {
-    	
-    	/** The actual entry being held by this wrapper. */
-    	private Entry<Integer, List<String>> actualEntry;
-    	
-    	public IdentifiableEntry(Entry<Integer, List<String>> e) {
-    		actualEntry = e;
-    	}
-
-		public Entry<Integer, List<String>> getEntry() {
-			return actualEntry;
-		}
-
-		@Override
-		public int getId() {
-			return actualEntry.getKey();
-		}
+    public void setMap( Map<Integer, List<String>> m) {
+    	this.map = m;
+    }
+    
+    /**
+     * Returns the map for the CompressionManager.
+     * @return the map for the CompressionManager.
+     */
+    public Map<Integer, List<String>> getMap() {
+    	return map;
     }
 }
 
